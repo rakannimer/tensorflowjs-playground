@@ -26,8 +26,12 @@ export const generateXs = memoize(
 );
 
 export const generateData = memoize(
-  (numPoints = 75, coeffs: { a: number; b: number; c: number }) => {
-    const xs = generateXs(numPoints, [-1, 1]);
+  (
+    numPoints = 75,
+    coeffs: { a: number; b: number; c: number },
+    xRange = [-1, 1]
+  ) => {
+    const xs = generateXs(numPoints, xRange);
     const a = tf.scalar(coeffs.a);
     const b = tf.scalar(coeffs.b);
     const c = tf.scalar(coeffs.c);
@@ -40,7 +44,23 @@ export const generateData = memoize(
       ys: Array.from(normalizeYs(ys).dataSync())
     };
   },
-  (numPoints: number, coeffs: { a: number; b: number; c: number }) => {
-    return `${numPoints}_${coeffs.a}_${coeffs.b}_${coeffs.c}`;
+  (numPoints: number, coeffs: { a: number; b: number; c: number }, range) => {
+    return `${numPoints}_${coeffs.a}_${coeffs.b}_${coeffs.c}_${JSON.stringify(
+      range
+    )}`;
   }
 );
+export const generateTensors = (
+  numPoints = 75,
+  coeffs: { a: number; b: number; c: number },
+  xRange = [-1, 1]
+) => {
+  const xs = generateXs(numPoints, xRange);
+  const a = tf.scalar(coeffs.a);
+  const b = tf.scalar(coeffs.b);
+  const c = tf.scalar(coeffs.c);
+  const axSquared = a.mul(xs.square());
+  const bx = b.mul(xs);
+  const ys = axSquared.add(bx).add(c);
+  return { xs, ys };
+};

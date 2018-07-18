@@ -6,9 +6,11 @@ import {
   VictoryLabel,
   VictoryLegend
 } from "victory";
+import { observer } from "mobx-react";
 import { colors } from "./COLORS";
 import Button from "./Button";
 import { Separator } from "./Separator";
+import { state, actions } from "../state";
 
 const titleStyle = {
   color: "white",
@@ -24,82 +26,106 @@ const titleStyle = {
   justifyContent: "center"
 } as React.CSSProperties;
 
-export const TrainingGym = ({
-  training = {
-    xs: [],
-    ys: []
-  },
-  predicted = {
-    xs: [],
-    ys: []
-  },
-  loss = {}
-}) => {
-  return (
-    <React.Fragment>
-      <div style={{ background: colors.green, width: "100%" }}>
-        <div className="flex-row" style={titleStyle}>
-          Gym
-        </div>
-        <div className="flex-row">
-          <VictoryChart
-            style={
-              {
-                parent: { height: 300 }
-              } as any
-            }
-          >
-            <VictoryLegend
-              x={430}
-              y={0}
-              //@ts-ignore
-              title="Legend"
-              centerTitle
-              orientation="horizontal"
-              gutter={20}
+export const TrainingGym = observer(
+  ({
+    training = {
+      xs: [],
+      ys: []
+    },
+    predicted = {
+      xs: [],
+      ys: []
+    },
+    loss = {}
+  }) => {
+    const trainingData = state.trainingData.get();
+    const trainingDataAsPoints = trainingData.xs.map((x, i) => {
+      // console.log(x, i);
+      return {
+        x: x,
+        y: trainingData.ys[i]
+      };
+    });
+
+    const guessedData = state.guessedData.get();
+    const guessedDataAsPoints = guessedData.xs.map((x, i) => {
+      return {
+        x,
+        y: guessedData.ys[i]
+      };
+    });
+    return (
+      <React.Fragment>
+        <div style={{ background: colors.green, width: "100%" }}>
+          <div className="flex-row" style={titleStyle}>
+            Gym
+          </div>
+          <div className="flex-row">
+            <VictoryChart
               style={
                 {
-                  border: { stroke: colors.palePink },
-                  title: { fontSize: 20 }
+                  parent: { height: 300 }
                 } as any
               }
-              data={[
-                {
-                  name: "Training Data",
-                  symbol: { fill: "tomato", type: "star" }
-                },
-                { name: "Predicted Shape", symbol: { fill: "orange" } },
-                { name: "Loss", symbol: { fill: "gold" } }
-              ]}
-            />
-            <VictoryScatter
-              symbol={() => "star"}
-              style={{ data: { fill: "tomato" } }}
-              data={[{ x: 1, y: 2 }, { x: 2, y: 4 }]}
-            />
-            <VictoryScatter
-              style={{ data: { fill: "orange" } }}
-              data={[{ x: -1, y: 2 }, { x: -2, y: 4 }]}
-            />
-            <VictoryScatter
-              style={{ data: { fill: "gold" } }}
-              data={[{ x: -3, y: 1 }, { x: 3, y: 2 }]}
-            />
-          </VictoryChart>
+            >
+              <VictoryLegend
+                x={430}
+                y={0}
+                //@ts-ignore
+                title="Legend"
+                centerTitle
+                orientation="horizontal"
+                gutter={20}
+                style={
+                  {
+                    border: { stroke: colors.palePink },
+                    title: { fontSize: 20 }
+                  } as any
+                }
+                data={[
+                  {
+                    name: "Training Data",
+                    symbol: { fill: "tomato", type: "star" }
+                  },
+                  { name: "Predicted Shape", symbol: { fill: "orange" } },
+                  { name: "Loss", symbol: { fill: "gold" } }
+                ]}
+              />
+              <VictoryScatter
+                symbol={() => "star"}
+                style={{ data: { fill: "tomato" } }}
+                data={trainingDataAsPoints}
+              />
+              <VictoryScatter
+                style={{ data: { fill: "orange" } }}
+                data={guessedDataAsPoints}
+              />
+              <VictoryScatter
+                style={{ data: { fill: "gold" } }}
+                data={[{ x: -3, y: 1 }, { x: 3, y: 2 }]}
+              />
+            </VictoryChart>
+          </div>
+          <Separator vertical={20} />
+          <div
+            style={{
+              alignItems: "center",
+              justifyContent: "space-around",
+              display: "flex"
+            }}
+          >
+            <Button
+              onClick={() => {
+                actions.train();
+              }}
+            >
+              Train
+            </Button>
+            <Button onClick={() => {}}>Reset</Button>
+          </div>
+          <Separator vertical={20} />
         </div>
-        <Separator vertical={20} />
-        <div
-          style={{
-            alignItems: "center",
-            justifyContent: "space-around",
-            display: "flex"
-          }}
-        >
-          <Button onClick={() => {}}>Train</Button>
-          <Button onClick={() => {}}>Reset</Button>
-        </div>
-        <Separator vertical={20} />
-      </div>
-    </React.Fragment>
-  );
-};
+      </React.Fragment>
+    );
+  }
+);

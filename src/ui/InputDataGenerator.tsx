@@ -5,6 +5,7 @@ import { Separator } from "./Separator";
 import Button from "./Button";
 import { state, actions } from "../state";
 import { observer } from "mobx-react";
+import { generateData } from "../tf-utils/generate-data";
 
 const CoefficientSelector: React.ComponentType<{
   name: string;
@@ -31,10 +32,15 @@ const CoefficientSelector: React.ComponentType<{
       </div>
       <input
         onChange={ev => {
-          value.set(ev.target.value);
+          if (ev.target.value === "") {
+            return;
+          }
+
+          const valueAsNumber = parseFloat(ev.target.value);
+          value.set(valueAsNumber);
         }}
         type="number"
-        value={value.get()}
+        defaultValue={value.get()}
         style={{
           width,
           height,
@@ -110,7 +116,7 @@ export const Formula: React.StatelessComponent<{
       }}
     >
       {xToPower.reverse().map((el: JSX.Element, i: number) => (
-        <React.Fragment>
+        <React.Fragment key={i}>
           <div style={coefficientValueStyle}>{coefficients[i].get()}</div>
           {el}
           {i < coefficients.length - 1 ? "+" : ""}
@@ -140,7 +146,7 @@ export const CoefficientSelectorsContainer: React.ComponentType = ({
 
 export class InputDataGenerator extends React.Component {
   render() {
-    const { a, b, c } = state.guessedCoefficients;
+    const { a, b, c } = state.trainingCoefficients;
 
     return (
       <React.Fragment>
@@ -187,7 +193,7 @@ export class InputDataGenerator extends React.Component {
               <Formula coefficients={[a, b, c]} />
             </CoefficientSelectorsContainer>
           </div>
-          <div
+          {/* <div
             style={{
               marginTop: 20,
               alignItems: "center",
@@ -196,12 +202,11 @@ export class InputDataGenerator extends React.Component {
           >
             <Button
               onClick={() => {
-                actions.generateData();
               }}
             >
               Generate Data
             </Button>
-          </div>
+          </div> */}
           <Separator vertical={20} />
         </div>
       </React.Fragment>
