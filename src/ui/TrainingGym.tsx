@@ -7,7 +7,7 @@ import {
   VictoryLegend
 } from "victory";
 import { colors } from "./COLORS";
-import { Button } from "./Button";
+import Button from "./Button";
 import { Separator } from "./Separator";
 
 const titleStyle = {

@@ -1,8 +1,6 @@
 import * as React from "react";
 import { render } from "react-dom";
 import * as tf from "@tensorflow/tfjs";
-import { Tensor } from "@tensorflow/tfjs";
-import { VictoryChart } from "victory";
 import { generateData } from "./tf-utils/generate-data";
 import { TensorsChart } from "./ui/TensorsChart";
 import "./ui.css";
@@ -43,8 +41,8 @@ const loss = (predictions, labels) => {
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const train = async (
-  xs: Tensor,
-  ys: Tensor,
+  xs: tf.Tensor,
+  ys: tf.Tensor,
   numIterations = 75,
   onStep = async (stepCoeffs: {}) => {}
 ) => {
@@ -100,8 +98,8 @@ const colors = {
 import { Header } from "./ui/Header";
 import { InputDataGenerator } from "./ui/InputDataGenerator";
 import { TrainingGym } from "./ui/TrainingGym";
-
-const App = () => {
+import { observer } from "mobx-react";
+const App = observer(() => {
   return (
     <div className="flex-container">
       <Header />
@@ -110,7 +108,7 @@ const App = () => {
       <div className="flex-row">Current Coefficients : x^2 + x + 1</div>
     </div>
   );
-};
+});
 
 // const App = () => {
 //   return (

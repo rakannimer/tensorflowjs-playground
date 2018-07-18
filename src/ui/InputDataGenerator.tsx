@@ -1,12 +1,15 @@
 import * as React from "react";
+import { IObservableValue } from "mobx";
 import { colors } from "./COLORS";
 import { Separator } from "./Separator";
-import { Button } from "./Button";
+import Button from "./Button";
+import { state, actions } from "../state";
+import { observer } from "mobx-react";
 
 const CoefficientSelector: React.ComponentType<{
   name: string;
-  value: any;
-}> = ({ name, value }) => {
+  value: IObservableValue<any>;
+}> = observer(({ name, value }) => {
   const width = 47;
   const height = 32;
   return (
@@ -27,8 +30,11 @@ const CoefficientSelector: React.ComponentType<{
         {name}
       </div>
       <input
+        onChange={ev => {
+          value.set(ev.target.value);
+        }}
         type="number"
-        defaultValue={value}
+        value={value.get()}
         style={{
           width,
           height,
@@ -44,7 +50,7 @@ const CoefficientSelector: React.ComponentType<{
       />
     </div>
   );
-};
+});
 
 const coefficientValueStyle = {
   width: "30px",
@@ -77,8 +83,10 @@ const getCoefficientNameFromIndex = (i: number = 0) => {
 };
 
 export const Formula: React.StatelessComponent<{
-  coefficients: number[];
-}> = ({ coefficients = [1, 1, 1] }) => {
+  coefficients: Array<IObservableValue<any>>;
+}> = observer(({ coefficients }) => {
+  // const [a,b,c] = coefficients;
+  // coefficients.map(())
   const xToPower = coefficients.map((c, i) => {
     if (i > 1) {
       return (
@@ -101,16 +109,16 @@ export const Formula: React.StatelessComponent<{
         display: "flex"
       }}
     >
-      {xToPower.reverse().map((el, i) => (
+      {xToPower.reverse().map((el: JSX.Element, i: number) => (
         <React.Fragment>
-          <div style={coefficientValueStyle}>{coefficients[i]}</div>
+          <div style={coefficientValueStyle}>{coefficients[i].get()}</div>
           {el}
           {i < coefficients.length - 1 ? "+" : ""}
         </React.Fragment>
       ))}
     </div>
   );
-};
+});
 
 export const CoefficientSelectorsContainer: React.ComponentType = ({
   children
@@ -132,6 +140,8 @@ export const CoefficientSelectorsContainer: React.ComponentType = ({
 
 export class InputDataGenerator extends React.Component {
   render() {
+    const { a, b, c } = state.guessedCoefficients;
+
     return (
       <React.Fragment>
         <div
@@ -144,8 +154,6 @@ export class InputDataGenerator extends React.Component {
             flexDirection: "column",
             minHeight: 350,
             maxHeight: 350
-            // minHeight: 500,
-            // maxHeight: 500
           }}
         >
           <div className="flex-row" style={titleStyle}>
@@ -162,21 +170,21 @@ export class InputDataGenerator extends React.Component {
             <CoefficientSelectorsContainer>
               <CoefficientSelector
                 name={getCoefficientNameFromIndex(0)}
-                value={1}
+                value={a}
               />
               <Separator vertical={20} />
               <CoefficientSelector
                 name={getCoefficientNameFromIndex(1)}
-                value={2}
+                value={b}
               />
               <Separator vertical={20} />
               <CoefficientSelector
                 name={getCoefficientNameFromIndex(2)}
-                value={2}
+                value={c}
               />
             </CoefficientSelectorsContainer>
             <CoefficientSelectorsContainer>
-              <Formula coefficients={[1, 1, 2]} />
+              <Formula coefficients={[a, b, c]} />
             </CoefficientSelectorsContainer>
           </div>
           <div
@@ -188,7 +196,7 @@ export class InputDataGenerator extends React.Component {
           >
             <Button
               onClick={() => {
-                console.log("Oh hai");
+                actions.generateData();
               }}
             >
               Generate Data
