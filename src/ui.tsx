@@ -1,10 +1,11 @@
 import * as React from "react";
 import { render } from "react-dom";
 import * as tf from "@tensorflow/tfjs";
+import { Tensor } from "@tensorflow/tfjs";
+import { VictoryChart } from "victory";
 import { generateData } from "./tf-utils/generate-data";
 import { TensorsChart } from "./ui/TensorsChart";
 import "./ui.css";
-import { Tensor } from "@tensorflow/tfjs";
 
 const { xs: xsTraining, ys: ysTraining } = generateData(75, {
   a: 1,
@@ -21,21 +22,6 @@ const { xs: xsInitial, ys: ysInitial } = generateData(75, initialCoefficients);
 const a = tf.variable(tf.scalar(initialCoefficients.a));
 const b = tf.variable(tf.scalar(initialCoefficients.b));
 const c = tf.variable(tf.scalar(initialCoefficients.c));
-// const generateInitialCoefficients = () => {
-
-//   return { a, b, c };
-// };
-
-// const { a, b, c } = generateInitialCoefficients();
-// const polynomial = a.mul();
-// const predict = x => {
-//   return tf.tidy(() => {
-//     const ax2 = a.mul(x.squared());
-//     const bx = a.mul(x);
-//     const polynomial = ax2.add(bx).add(c);
-//     return polynomial;
-//   });
-// };
 
 const predict = (x: tf.Tensor): tf.Tensor => {
   return tf.tidy(() => {
@@ -45,6 +31,7 @@ const predict = (x: tf.Tensor): tf.Tensor => {
       .add(c);
   });
 };
+
 const loss = (predictions, labels) => {
   const meanSquareError = predictions
     .sub(labels)
@@ -53,12 +40,13 @@ const loss = (predictions, labels) => {
   return meanSquareError;
 };
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const train = async (
   xs: Tensor,
   ys: Tensor,
   numIterations = 75,
-  onStep = async (step: number) => {}
+  onStep = async (stepCoeffs: {}) => {}
 ) => {
   const learningRate = 0.5;
   // xs.print();
@@ -68,11 +56,11 @@ const train = async (
       const predsYs = predict(xs);
       return loss(predsYs, ys);
     });
-    // console.log();
+    const [av, bv, cv] = await Promise.all([a.data(), b.data(), c.data()]);
     await onStep({
-      a: a.dataSync()[0],
-      b: b.dataSync()[0],
-      c: c.dataSync()[0]
+      a: av[0],
+      b: bv[0],
+      c: cv[0]
     });
     // await tf.nextFrame();
   }
@@ -83,13 +71,8 @@ class TrainingModel extends React.Component {
     xs: tf.tensor1d([]),
     ys: tf.tensor1d([])
   };
-  // state = {
-  //   a: tf.scalar(initialCoefficients.a),
-  //   b: tf.scalar(initialCoefficients.b),
-  //   c: tf.scalar(initialCoefficients.c)
-  // };
   async componentDidMount() {
-    train(xsTraining, ysTraining, 500, async ({ a, b, c }) => {
+    await train(xsTraining, ysTraining, 500, async ({ a, b, c }) => {
       console.log("step", { a, b, c });
       const { xs, ys } = generateData(50, {
         a,
@@ -98,29 +81,7 @@ class TrainingModel extends React.Component {
       });
       this.setState({ xs, ys });
       await delay(200);
-    }).then(() => {
-      // a.print();
     });
-    // for (let i = 0; i < 500; i++) {
-    //   const learningRate = 0.5;
-    //   const optimizer = tf.train.sgd(learningRate);
-    //   optimizer.minimize(() => {
-    //     const predsYs = predict(this.props.xs);
-    //     return loss(predsYs, this.props.ys);
-    //   });
-    //   //
-    //   if (i === 498) {
-    //     console.log("dsaads", a.dataSync()[0]);
-    //     const { xs, ys } = generateData(50, {
-    //       a: a.dataSync()[0],
-    //       b: b.dataSync()[0],
-    //       c: c.dataSync()[0]
-    //     });
-    //     this.setState({ xs, ys });
-    //   }
-    //   // await tf.nextFrame();
-    //   // this.setState({ xs: this.props.xs, ys: this.props.ys });
-    // }
   }
 
   render() {
@@ -131,26 +92,57 @@ class TrainingModel extends React.Component {
   }
 }
 
+const colors = {
+  pink: "#F67280",
+  orange: "#FFD0B3",
+  green: "#C8D9BF"
+};
+import { Header } from "./ui/Header";
+import { InputDataGenerator } from "./ui/InputDataGenerator";
+import { TrainingGym } from "./ui/TrainingGym";
+
 const App = () => {
   return (
     <div className="flex-container">
-      <div className="flex-row">
-        <div className="card">
-          <TensorsChart xs={xsTraining} ys={ysTraining} title="Training Data" />
-        </div>
-        <div className="horizontal-spacing" />
-        <div className="card">
-          <TrainingModel xs={xsInitial} ys={ysInitial} />
-          {/* <RenderPolynomial /> */}
-          {/* <TensorsChart
-            xs={xsInitial}
-            ys={ysInitial}
-            title="Initial Prediction"
-          /> */}
-        </div>
-      </div>
+      <Header />
+      <InputDataGenerator />
+      <TrainingGym />
+      <div className="flex-row">Current Coefficients : x^2 + x + 1</div>
     </div>
   );
 };
+
+// const App = () => {
+//   return (
+//     <div className="flex-container">
+//       <div className="flex-row">
+//         <div className="card">
+//           <h2>Charts</h2>
+//           {/* <VictoryChart
+//             style={
+//               {
+//                 parent: { background: "pink", border: "1px solid #ccc" }
+//               } as any
+//             }
+//           > */}
+
+//           <TensorsChart xs={xsTraining} ys={ysTraining} title="Training Data" />
+
+//           {/* </VictoryChart> */}
+//         </div>
+//         <div className="horizontal-spacing" />
+//         <div className="card">
+//           <TrainingModel xs={xsInitial} ys={ysInitial} />
+//           {/* <RenderPolynomial /> */}
+//           {/* <TensorsChart
+//             xs={xsInitial}
+//             ys={ysInitial}
+//             title="Initial Prediction"
+//           /> */}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 render(<App />, document.getElementById("root"));

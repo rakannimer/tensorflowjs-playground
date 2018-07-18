@@ -22,7 +22,7 @@ class TensorsChart extends React.Component<
     xs: [],
     ys: []
   };
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: TensorsChartProps) {
     if (prevProps.refresh !== this.props.refresh) {
       this.tensorPropsToArray();
     }
@@ -39,31 +39,29 @@ class TensorsChart extends React.Component<
   render() {
     const { xs, ys } = this.state;
     const data = xs.map((x, i) => ({ x, y: ys[i] }));
-    return (
-      <React.Fragment>
-        <h2>{this.props.title}</h2>
-        <VictoryChart
-          style={
-            { parent: { background: "pink", border: "1px solid #ccc" } } as any
-          }
-        >
-          {this.props.chartType === "scatter" ? (
-            <VictoryScatter
-              data={data}
-              style={{
-                data: { stroke: "#c43a31" }
-              }}
-            />
-          ) : (
-            <VictoryLine
-              data={data}
-              style={{
-                data: { stroke: "#c43a31" }
-              }}
-            />
-          )}
-        </VictoryChart>
-      </React.Fragment>
+    console.warn(data);
+    return this.props.chartType === "scatter" ? (
+      <VictoryScatter
+        data={data}
+        style={{
+          data: { stroke: "#c43a31" }
+        }}
+      />
+    ) : (
+      <VictoryChart
+        style={
+          {
+            parent: { background: "pink", border: "1px solid #ccc" }
+          } as any
+        }
+      >
+        <VictoryLine
+          data={data}
+          style={{
+            data: { stroke: "#c43a31" }
+          }}
+        />
+      </VictoryChart>
     );
   }
 }
