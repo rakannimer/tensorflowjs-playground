@@ -85,19 +85,24 @@ export const TrainingGym = observer(
                 data={[
                   {
                     name: "Training Data",
-                    symbol: { fill: "tomato", type: "star" }
+                    symbol: { fill: "beige", type: "star" }
                   },
-                  { name: "Predicted Shape", symbol: { fill: "orange" } }
+                  {
+                    name: "Predicted Shape",
+                    symbol: { fill: "tomato", type: "square" }
+                  }
                   // { name: "Loss", symbol: { fill: "gold" } }
                 ]}
               />
               <VictoryScatter
                 symbol={() => "star"}
-                style={{ data: { fill: "tomato" } }}
+                size={6}
+                style={{ data: { fill: "beige" } }}
                 data={trainingDataAsPoints}
               />
               <VictoryScatter
-                style={{ data: { fill: "orange" } }}
+                symbol={() => "square"}
+                style={{ data: { fill: "tomato" } }}
                 data={guessedDataAsPoints}
               />
               {/* <VictoryScatter
@@ -121,7 +126,13 @@ export const TrainingGym = observer(
             >
               Train
             </Button>
-            <Button onClick={() => {}}>Reset</Button>
+            <Button
+              onClick={() => {
+                actions.reset();
+              }}
+            >
+              Reset
+            </Button>
           </div>
           <Separator vertical={20} />
         </div>

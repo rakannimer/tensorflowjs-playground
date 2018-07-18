@@ -91,9 +91,7 @@ const getCoefficientNameFromIndex = (i: number = 0) => {
 export const Formula: React.StatelessComponent<{
   coefficients: Array<IObservableValue<any>>;
 }> = observer(({ coefficients }) => {
-  // const [a,b,c] = coefficients;
-  // coefficients.map(())
-  const xToPower = coefficients.map((c, i) => {
+  const xToPower = coefficients.map((c: any, i: number) => {
     if (i > 1) {
       return (
         <React.Fragment key={i}>

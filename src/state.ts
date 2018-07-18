@@ -13,6 +13,7 @@ export class State {
   };
   trainingData = computed(() => {
     const { a, b, c } = this.trainingCoefficients;
+    console.log("updating trainig");
     return generateData(100, {
       a: a.get(),
       b: b.get(),
@@ -43,7 +44,11 @@ export class State {
     b: 0,
     c: 1
   });
-
+  reset = () => {
+    this.a = tf.variable(tf.scalar(-3));
+    this.b = tf.variable(tf.scalar(2));
+    this.c = tf.variable(tf.scalar(1));
+  };
   xs = tf.randomUniform([75], -1, 1);
   // xs = tf.randomUniform([25], -1, 1);
   ys = this.a
@@ -57,6 +62,27 @@ export class State {
   };
   // trainingData = [];
   constructor() {
+    reaction(
+      () =>
+        `${this.trainingCoefficients.a.get()}${this.trainingCoefficients.b.get()}${this.trainingCoefficients.c.get()}`,
+      () => {
+        // console.log(this.trainingCoefficients.a.get());
+        this.a = tf.variable(tf.scalar(this.trainingCoefficients.a.get()));
+        this.b = tf.variable(tf.scalar(this.trainingCoefficients.b.get()));
+        this.c = tf.variable(tf.scalar(this.trainingCoefficients.c.get()));
+        this.ys = this.a
+          .mul(this.xs.square())
+          .add(this.b.mul(this.xs))
+          .add(this.c);
+        this.td = generateTensors(50, {
+          a: this.trainingCoefficients.a.get(),
+          b: this.trainingCoefficients.b.get(),
+          c: this.trainingCoefficients.c.get()
+        });
+        this.td.ys.print();
+        // this.ys.print();
+      }
+    );
     // const {xs, ys } = generateTensors(this.)
   }
   // private generateDataFromp
@@ -67,24 +93,24 @@ export class StateActions {
   constructor(state: State) {
     this.state = state;
   }
-  private getLoss = (predictions, labels) => {
+  private getLoss = (predictions: tf.Tensor<tf.Rank.R0>, labels) => {
     // predictions.print();
     const meanSquareError = predictions
       .sub(labels)
       .square()
       .mean();
-    return meanSquareError;
+    return meanSquareError as tf.Tensor<tf.Rank.R0>;
   };
-  public predict = (x: tf.Tensor): tf.Tensor => {
+  public predict = (x: tf.Tensor) => {
     return tf.tidy(() => {
       return this.state.a
         .mul(x.square())
         .add(this.state.b.mul(x))
         .add(this.state.c);
-    });
+    }) as tf.Tensor<tf.Rank.R0>;
   };
 
-  public train = async (numIterations = 900) => {
+  public train = async (numIterations = 50) => {
     const learningRate = 0.5;
     const optimizer = tf.train.sgd(learningRate);
     // this.state.ys.print();
@@ -92,7 +118,6 @@ export class StateActions {
       optimizer.minimize(() => {
         const predsYs = this.predict(this.state.td.xs);
         const loss = this.getLoss(predsYs, this.state.td.ys);
-        // loss.print();
         return loss;
       });
 
@@ -105,8 +130,12 @@ export class StateActions {
       this.state.guessedCoefficients.a.set(currentGuessedCoefficients.a);
       this.state.guessedCoefficients.b.set(currentGuessedCoefficients.b);
       this.state.guessedCoefficients.c.set(currentGuessedCoefficients.c);
-      // await delay(10);
+      await delay(100);
     }
+    console.log("done");
+  };
+  public reset = () => {
+    this.state.reset();
   };
 }
 
