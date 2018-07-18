@@ -105,7 +105,6 @@ const App = observer(() => {
       <Header />
       {/* <InputDataGenerator /> */}
       <TrainingGym />
-      <div className="flex-row">Current Coefficients : x^2 + x + 1</div>
     </div>
   );
 });

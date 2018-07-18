@@ -87,8 +87,8 @@ export const TrainingGym = observer(
                     name: "Training Data",
                     symbol: { fill: "tomato", type: "star" }
                   },
-                  { name: "Predicted Shape", symbol: { fill: "orange" } },
-                  { name: "Loss", symbol: { fill: "gold" } }
+                  { name: "Predicted Shape", symbol: { fill: "orange" } }
+                  // { name: "Loss", symbol: { fill: "gold" } }
                 ]}
               />
               <VictoryScatter
@@ -100,10 +100,10 @@ export const TrainingGym = observer(
                 style={{ data: { fill: "orange" } }}
                 data={guessedDataAsPoints}
               />
-              <VictoryScatter
+              {/* <VictoryScatter
                 style={{ data: { fill: "gold" } }}
                 data={[{ x: -3, y: 1 }, { x: 3, y: 2 }]}
-              />
+              /> */}
             </VictoryChart>
           </div>
           <Separator vertical={20} />

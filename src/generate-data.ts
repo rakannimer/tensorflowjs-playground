@@ -1,18 +1,20 @@
-import * as tf from '@tensorflow/tfjs';
+import * as tf from "@tensorflow/tfjs";
 
-export function generateData(numPoints = 75, coeff, sigma = 0.04) {
+export function generateData(numPoints = 75, coeff: any, sigma = 0.04) {
   return tf.tidy(() => {
-
     const [a, b, c, d] = [
-      tf.scalar(coeff.a), tf.scalar(coeff.b), tf.scalar(coeff.c),
+      tf.scalar(coeff.a),
+      tf.scalar(coeff.b),
+      tf.scalar(coeff.c),
       tf.scalar(coeff.d)
     ];
 
     const xs = tf.randomUniform([numPoints], -1, 1);
 
     // Generate polynomial data
-    const three = tf.scalar(3, 'int32');
-    const ys = a.mul(xs.pow(three))
+    const three = tf.scalar(3, "int32");
+    const ys = a
+      .mul(xs.pow(three))
       .add(b.mul(xs.square()))
       .add(c.mul(xs))
       .add(d)
@@ -27,8 +29,8 @@ export function generateData(numPoints = 75, coeff, sigma = 0.04) {
     const ysNormalized = ys.sub(ymin).div(yrange);
 
     return {
-      xs, 
+      xs,
       ys: ysNormalized
     };
-  })
+  });
 }
