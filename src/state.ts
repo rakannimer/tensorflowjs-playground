@@ -36,12 +36,12 @@ export class State {
   //   });
   // });
   a = tf.variable(tf.scalar(-3));
-  b = tf.variable(tf.scalar(Math.random()));
-  c = tf.variable(tf.scalar(Math.random()));
+  b = tf.variable(tf.scalar(2));
+  c = tf.variable(tf.scalar(1));
   td = generateTensors(50, {
-    a: Math.random(),
-    b: Math.random(),
-    c: Math.random()
+    a: 1,
+    b: 0,
+    c: 1
   });
   xs = tf.randomUniform([75], -1, 1);
   // xs = tf.randomUniform([25], -1, 1);
@@ -109,7 +109,6 @@ export class StateActions {
         // this.state.ys.print();
         // console.log("\n");
         const loss = this.getLoss(predsYs, this.state.td.ys);
-        loss.print();
         // loss.print();
         return loss;
       });
@@ -123,7 +122,7 @@ export class StateActions {
       this.state.guessedCoefficients.a.set(currentGuessedCoefficients.a);
       this.state.guessedCoefficients.b.set(currentGuessedCoefficients.b);
       this.state.guessedCoefficients.c.set(currentGuessedCoefficients.c);
-      await delay(10);
+      // await delay(10);
     }
   };
 }

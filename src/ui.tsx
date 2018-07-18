@@ -103,7 +103,7 @@ const App = observer(() => {
   return (
     <div className="flex-container">
       <Header />
-      <InputDataGenerator />
+      {/* <InputDataGenerator /> */}
       <TrainingGym />
       <div className="flex-row">Current Coefficients : x^2 + x + 1</div>
     </div>
