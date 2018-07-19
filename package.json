@@ -19,12 +19,15 @@
   "scripts": {
     "watch": "tsc --watch",
     "dev": "nodemon build/main.js",
-    "start": "parcel src/index.html"
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.tsx -d static-build/",
+    "deploy": "npm run build && cd static-build && surge --domain tensor-flow-js-playground.surge.sh"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.112",
     "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
+    "@types/react-router-dom": "^4.2.7",
     "@types/victory": "^0.9.18",
     "parcel-bundler": "^1.9.7",
     "prettier": "^1.13.7",

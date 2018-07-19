@@ -7,6 +7,7 @@
     "lib": ["es2018", "dom"],
     "outDir": "./build/",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }
