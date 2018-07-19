@@ -40,7 +40,6 @@ export const TrainingGym = observer(
   }) => {
     const trainingData = state.trainingData.get();
     const trainingDataAsPoints = trainingData.xs.map((x, i) => {
-      // console.log(x, i);
       return {
         x: x,
         y: trainingData.ys[i]
@@ -56,7 +55,13 @@ export const TrainingGym = observer(
     });
     return (
       <React.Fragment>
-        <div style={{ background: colors.green, width: "100%" }}>
+        <div
+          style={{
+            background: colors.green,
+            width: "50%"
+            // justifyContent: "center"
+          }}
+        >
           <div className="flex-row" style={titleStyle}>
             Gym
           </div>
@@ -64,7 +69,7 @@ export const TrainingGym = observer(
             <VictoryChart
               style={
                 {
-                  parent: { height: 300 }
+                  parent: { height: 220 }
                 } as any
               }
             >

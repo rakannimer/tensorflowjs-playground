@@ -32,12 +32,12 @@ export const Header = () => {
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        minHeight: 100,
-        maxHeight: 100
+        minHeight: 50,
+        maxHeight: 50
       }}
     >
-      <HeaderRow>Curve Fitting</HeaderRow>
-      <HeaderRow>Second Order Polynomial</HeaderRow>
+      <HeaderRow>TensorFlowJS Second Order Polynomial Curve Fitting</HeaderRow>
+      {/* <HeaderRow /> */}
     </div>
   );
 };

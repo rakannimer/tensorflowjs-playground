@@ -8,21 +8,21 @@ body {
   flex-direction: column;
   height: 100%;
   flex: 1;
-  align-items: center;
+  /* align-items: center; */
 }
 .flex-row {
   display: flex;
-  /* height: 100%; */
   width: 100%;
   flex-direction: row;
-  /* justify-content: center;
-  align-items: center; */
-  /* margin-top: 100; */
-  /* grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-areas: ". . . ." ". . . ." ". . . ."; */
 }
-
+li {
+  padding: 0;
+  margin: 0;
+}
+ul {
+  padding: 0;
+  margin: 0;
+}
 .card {
   flex: 1;
 }

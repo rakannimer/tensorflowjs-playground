@@ -7,6 +7,39 @@ import { state, actions } from "../state";
 import { observer } from "mobx-react";
 import { generateData } from "../tf-utils/generate-data";
 
+const NumberSelector: React.ComponentType<{
+  value: IObservableValue<any>;
+}> = observer(({ value }) => {
+  const width = 47;
+  const height = 32;
+  return (
+    <input
+      onChange={ev => {
+        if (ev.target.value === "") {
+          return;
+        }
+
+        const valueAsNumber = parseFloat(ev.target.value);
+        value.set(valueAsNumber);
+      }}
+      type="number"
+      defaultValue={value.get()}
+      style={{
+        width,
+        height,
+        background: colors.pink,
+        fontWeight: 600,
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        fontSize: "18px",
+        color: "white",
+        textAlign: "center"
+      }}
+    />
+  );
+});
+
 const CoefficientSelector: React.ComponentType<{
   name: string;
   value: IObservableValue<any>;
@@ -14,7 +47,12 @@ const CoefficientSelector: React.ComponentType<{
   const width = 47;
   const height = 32;
   return (
-    <div style={{ flexDirection: "row", display: "flex" }}>
+    <div
+      style={{
+        flexDirection: "row",
+        display: "flex"
+      }}
+    >
       <div
         style={{
           width,
@@ -30,41 +68,18 @@ const CoefficientSelector: React.ComponentType<{
       >
         {name}
       </div>
-      <input
-        onChange={ev => {
-          if (ev.target.value === "") {
-            return;
-          }
-
-          const valueAsNumber = parseFloat(ev.target.value);
-          value.set(valueAsNumber);
-        }}
-        type="number"
-        defaultValue={value.get()}
-        style={{
-          width,
-          height,
-          background: colors.pink,
-          fontWeight: 600,
-          alignItems: "center",
-          justifyContent: "center",
-          display: "flex",
-          fontSize: "18px",
-          color: "white",
-          textAlign: "center"
-        }}
-      />
+      <NumberSelector value={value} />
     </div>
   );
 });
 
 const coefficientValueStyle = {
-  width: "30px",
+  width: "60px",
   background: colors.palePink,
   textAlign: "center",
   alignItems: "center",
   fontFamily: "Roboto",
-  fontSize: "25px",
+  fontSize: "16px",
   display: "flex",
   justifyContent: "center",
   fontWeight: 900
@@ -106,6 +121,9 @@ export const Formula: React.StatelessComponent<{
       return "";
     }
   });
+  const precise = (x: string) => {
+    return Number.parseFloat(`${x}`).toPrecision(2);
+  };
   return (
     <div
       style={{
@@ -115,7 +133,9 @@ export const Formula: React.StatelessComponent<{
     >
       {xToPower.reverse().map((el: JSX.Element, i: number) => (
         <React.Fragment key={i}>
-          <div style={coefficientValueStyle}>{coefficients[i].get()}</div>
+          <div style={coefficientValueStyle}>
+            {precise(coefficients[i].get())}
+          </div>
           {el}
           {i < coefficients.length - 1 ? "+" : ""}
         </React.Fragment>
@@ -142,72 +162,76 @@ export const CoefficientSelectorsContainer: React.ComponentType = ({
   );
 };
 
-export class InputDataGenerator extends React.Component {
-  render() {
-    const { a, b, c } = state.trainingCoefficients;
-
-    return (
-      <React.Fragment>
-        <div
-          className="flex-row"
-          style={{
-            backgroundColor: colors.orange,
-            alignItems: "center",
-            paddingTop: 10,
-            paddingBottom: 10,
-            flexDirection: "column",
-            minHeight: 350,
-            maxHeight: 350
-          }}
-        >
-          <div className="flex-row" style={titleStyle}>
-            Coefficients to guess
-          </div>
-          <div
-            className="flex-row"
-            style={{
-              minHeight: 200,
-              maxHeight: 200
-              // ,background: "pink"
-            }}
-          >
-            <CoefficientSelectorsContainer>
-              <CoefficientSelector
-                name={getCoefficientNameFromIndex(0)}
-                value={a}
-              />
-              <Separator vertical={20} />
-              <CoefficientSelector
-                name={getCoefficientNameFromIndex(1)}
-                value={b}
-              />
-              <Separator vertical={20} />
-              <CoefficientSelector
-                name={getCoefficientNameFromIndex(2)}
-                value={c}
-              />
-            </CoefficientSelectorsContainer>
-            <CoefficientSelectorsContainer>
-              <Formula coefficients={[a, b, c]} />
-            </CoefficientSelectorsContainer>
-          </div>
-          {/* <div
-            style={{
-              marginTop: 20,
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <Button
-              onClick={() => {
-              }}
-            >
-              Generate Data
-            </Button>
-          </div> */}
+export const InputDataGenerator = observer(() => {
+  const { a, b, c } = state.trainingCoefficients;
+  const { a: guessedA, b: guessedB, c: guessedC } = state.guessedCoefficients;
+  console.log(state.loss.get());
+  return (
+    // <React.Fragment>
+    <div
+      className="flex-row"
+      style={{
+        backgroundColor: colors.orange,
+        alignItems: "center",
+        // justifyContent: "center",
+        paddingTop: 10,
+        paddingBottom: 10,
+        flexDirection: "column",
+        minHeight: 350,
+        width: "50%"
+      }}
+    >
+      <div className="flex-row" style={titleStyle}>
+        Coefficients to guess
+      </div>
+      <div
+        className="flex-row"
+        style={{
+          minHeight: 200,
+          maxHeight: 200
+          // ,background: "pink"
+        }}
+      >
+        <CoefficientSelectorsContainer>
+          <CoefficientSelector
+            name={getCoefficientNameFromIndex(0)}
+            value={a}
+          />
           <Separator vertical={20} />
-        </div>
-      </React.Fragment>
-    );
-  }
-}
+          <CoefficientSelector
+            name={getCoefficientNameFromIndex(1)}
+            value={b}
+          />
+          <Separator vertical={20} />
+          <CoefficientSelector
+            name={getCoefficientNameFromIndex(2)}
+            value={c}
+          />
+          <Separator vertical={20} />
+          <span>Training Iteration Count</span>
+          <Separator vertical={5} />
+          <div
+            style={{
+              flexDirection: "row",
+              display: "flex"
+            }}
+          >
+            <NumberSelector value={state.trainingIterations} />
+          </div>
+        </CoefficientSelectorsContainer>
+        <CoefficientSelectorsContainer>
+          <span>Polynomial to guess</span>
+          <Separator vertical={5} />
+          <Formula coefficients={[a, b, c]} />
+          <Separator vertical={20} />
+          <span>Guessed polynomial</span>
+          <Separator vertical={5} />
+          <Formula coefficients={[guessedA, guessedB, guessedC]} />
+          <Separator vertical={10} />
+          <div>Loss : {state.loss.get() !== -1 && state.loss.get()}</div>
+        </CoefficientSelectorsContainer>
+      </div>
+      <Separator vertical={20} />
+    </div>
+  );
+});
