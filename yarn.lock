@@ -88,6 +88,10 @@
     "@tensorflow/tfjs-core" "0.12.4"
     "@tensorflow/tfjs-layers" "0.7.0"
 
+"@types/history@*":
+  version "4.6.2"
+  resolved "https://registry.npmjs.org/@types/history/-/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
+
 "@types/lodash.memoize@^4.1.3":
   version "4.1.3"
   resolved "https://registry.npmjs.org/@types/lodash.memoize/-/lodash.memoize-4.1.3.tgz#7d3cd9cb9cd87085c9ee8a1679991180e6dae3cc"
@@ -115,6 +119,21 @@
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
   dependencies:
     "@types/node" "*"
+    "@types/react" "*"
+
+"@types/react-router-dom@^4.2.7":
+  version "4.2.7"
+  resolved "https://registry.npmjs.org/@types/react-router-dom/-/react-router-dom-4.2.7.tgz#9d36bfe175f916dd8d7b6b0237feed6cce376b4c"
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+    "@types/react-router" "*"
+
+"@types/react-router@*":
+  version "4.0.29"
+  resolved "https://registry.npmjs.org/@types/react-router/-/react-router-4.0.29.tgz#1a906dd99abf21297a5b7cf003d1fd36e7a92069"
+  dependencies:
+    "@types/history" "*"
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^16.4.6":
