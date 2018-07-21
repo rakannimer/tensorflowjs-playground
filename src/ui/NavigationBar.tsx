@@ -52,9 +52,6 @@ const routes = [
 ];
 
 export const NavigationBar = withRouter(props => {
-  // console.log(Object.keys(props));
-  // console.log(props.match.path.slice(1, props.match.path.length));
-  console.log(props);
   return (
     <div
       style={{

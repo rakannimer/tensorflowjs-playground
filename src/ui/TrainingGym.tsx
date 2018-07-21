@@ -58,7 +58,7 @@ export const TrainingGym = observer(
         <div
           style={{
             background: colors.green,
-            width: "45%"
+            width: "50%"
             // justifyContent: "center"
           }}
         >
@@ -72,6 +72,7 @@ export const TrainingGym = observer(
                   parent: { height: 220 }
                 } as any
               }
+              domain={{ x: [-1, 1], y: [-3, 3] }}
             >
               <VictoryLegend
                 x={430}
