@@ -58,7 +58,7 @@ export const TrainingGym = observer(
         <div
           style={{
             background: colors.green,
-            width: "50%"
+            width: "45%"
             // justifyContent: "center"
           }}
         >

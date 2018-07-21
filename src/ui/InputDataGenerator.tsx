@@ -150,7 +150,7 @@ export const CoefficientSelectorsContainer: React.ComponentType = ({
   return (
     <div
       style={{
-        width: "50%",
+        width: "45%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -165,7 +165,6 @@ export const CoefficientSelectorsContainer: React.ComponentType = ({
 export const InputDataGenerator = observer(() => {
   const { a, b, c } = state.trainingCoefficients;
   const { a: guessedA, b: guessedB, c: guessedC } = state.guessedCoefficients;
-  console.log(state.loss.get());
   return (
     // <React.Fragment>
     <div
@@ -189,7 +188,6 @@ export const InputDataGenerator = observer(() => {
         style={{
           minHeight: 200,
           maxHeight: 200
-          // ,background: "pink"
         }}
       >
         <CoefficientSelectorsContainer>
