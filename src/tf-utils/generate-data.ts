@@ -31,17 +31,19 @@ export const generateData = memoize(
     coeffs: { a: number; b: number; c: number },
     xRange = [-1, 1]
   ) => {
-    const xs = generateXs(numPoints, xRange);
-    const a = tf.scalar(coeffs.a);
-    const b = tf.scalar(coeffs.b);
-    const c = tf.scalar(coeffs.c);
-    const axSquared = a.mul(xs.square());
-    const bx = b.mul(xs);
-    const ys = axSquared.add(bx).add(c);
+    let xs = [];
+    let ys = [];
+    const increment = (xRange[1] - xRange[0]) / numPoints;
+    for (let i = xRange[0]; i < xRange[1]; i += increment) {
+      const x = i;
+      const y = coeffs.a * i ** 2 + coeffs.b * i + coeffs.c;
+      // console.log(y);
+      xs.push(x);
+      ys.push(y);
+    }
     return {
-      // Convert Float32Array to an array to make it easier to interact with it.
-      xs: Array.from(xs.dataSync()),
-      ys: Array.from(normalizeYs(ys).dataSync())
+      xs,
+      ys
     };
   },
   (numPoints: number, coeffs: { a: number; b: number; c: number }, range) => {
