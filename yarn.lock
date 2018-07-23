@@ -3640,9 +3640,9 @@ react-dom@^16.4.1:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
-react-google-charts@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.npmjs.org/react-google-charts/-/react-google-charts-2.0.4.tgz#78767ecee8c9d0bfe8d47a800fe3fd3ff72b5ff9"
+react-google-charts@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.npmjs.org/react-google-charts/-/react-google-charts-2.0.7.tgz#935fde4b48457cc17cf3cdf04e5f1451e5fe8fcf"
   dependencies:
     react-load-script "^0.0.6"
 
