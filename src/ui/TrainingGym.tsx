@@ -46,11 +46,11 @@ export const TrainingGym = observer(
       };
     });
 
-    const guessedData = state.guessedData.get();
-    const guessedDataAsPoints = guessedData.xs.map((x, i) => {
+    const predictedData = state.predictedData.get();
+    const predictedDataAsPoints = predictedData.xs.map((x, i) => {
       return {
         x,
-        y: guessedData.ys[i]
+        y: predictedData.ys[i]
       };
     });
     return (
@@ -109,7 +109,7 @@ export const TrainingGym = observer(
               <VictoryScatter
                 symbol={() => "square"}
                 style={{ data: { fill: "tomato" } }}
-                data={guessedDataAsPoints}
+                data={predictedDataAsPoints}
               />
               {/* <VictoryScatter
                 style={{ data: { fill: "gold" } }}

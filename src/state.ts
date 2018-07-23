@@ -20,8 +20,8 @@ export class State {
     });
   });
   trainingIterations = observable.box(50);
-  guessedData = computed(() => {
-    const { a, b, c } = this.guessedCoefficients;
+  predictedData = computed(() => {
+    const { a, b, c } = this.predictedCoefficients;
     return generateData(100, {
       a: a.get(),
       b: b.get(),
@@ -43,9 +43,9 @@ export class State {
     this.a.assign(tf.variable(tf.scalar(-3)));
     this.b.assign(tf.variable(tf.scalar(2)));
     this.c.assign(tf.variable(tf.scalar(1)));
-    this.guessedCoefficients.a.set(-3);
-    this.guessedCoefficients.b.set(2);
-    this.guessedCoefficients.c.set(1);
+    this.predictedCoefficients.a.set(-3);
+    this.predictedCoefficients.b.set(2);
+    this.predictedCoefficients.c.set(1);
     this.ys = this.a
       .mul(this.xs.square())
       .add(this.b.mul(this.xs))
@@ -63,7 +63,7 @@ export class State {
     .mul(this.xs.square())
     .add(this.b.mul(this.xs))
     .add(this.c);
-  guessedCoefficients = {
+  predictedCoefficients = {
     a: observable.box(this.a.dataSync()[0]),
     b: observable.box(this.b.dataSync()[0]),
     c: observable.box(this.c.dataSync()[0])
@@ -120,14 +120,14 @@ export class StateActions {
       });
 
       await tf.nextFrame();
-      const currentGuessedCoefficients = {
+      const currentPredictedCoefficients = {
         a: this.state.a.dataSync()[0],
         b: this.state.b.dataSync()[0],
         c: this.state.c.dataSync()[0]
       };
-      this.state.guessedCoefficients.a.set(currentGuessedCoefficients.a);
-      this.state.guessedCoefficients.b.set(currentGuessedCoefficients.b);
-      this.state.guessedCoefficients.c.set(currentGuessedCoefficients.c);
+      this.state.predictedCoefficients.a.set(currentPredictedCoefficients.a);
+      this.state.predictedCoefficients.b.set(currentPredictedCoefficients.b);
+      this.state.predictedCoefficients.c.set(currentPredictedCoefficients.c);
       await delay(10);
     }
     console.log("done");

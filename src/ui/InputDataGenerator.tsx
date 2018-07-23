@@ -164,7 +164,11 @@ export const CoefficientSelectorsContainer: React.ComponentType = ({
 
 export const InputDataGenerator = observer(() => {
   const { a, b, c } = state.trainingCoefficients;
-  const { a: guessedA, b: guessedB, c: guessedC } = state.guessedCoefficients;
+  const {
+    a: predictedA,
+    b: predictedB,
+    c: predictedC
+  } = state.predictedCoefficients;
   return (
     // <React.Fragment>
     <div
@@ -222,9 +226,9 @@ export const InputDataGenerator = observer(() => {
           <Separator vertical={5} />
           <Formula coefficients={[a, b, c]} />
           <Separator vertical={20} />
-          <span>Guessed polynomial</span>
+          <span>Predicted polynomial</span>
           <Separator vertical={5} />
-          <Formula coefficients={[guessedA, guessedB, guessedC]} />
+          <Formula coefficients={[predictedA, predictedB, predictedC]} />
           <Separator vertical={10} />
           <div>Loss : {state.loss.get() !== -1 && state.loss.get()}</div>
         </CoefficientSelectorsContainer>
