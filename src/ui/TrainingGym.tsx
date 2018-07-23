@@ -1,12 +1,7 @@
 import * as React from "react";
-import {
-  VictoryChart,
-  VictoryScatter,
-  VictoryLine,
-  VictoryLabel,
-  VictoryLegend
-} from "victory";
+import { Chart } from "react-google-charts";
 import { observer } from "mobx-react";
+
 import { colors } from "./COLORS";
 import Button from "./Button";
 import { Separator } from "./Separator";
@@ -39,19 +34,14 @@ export const TrainingGym = observer(
     loss = {}
   }) => {
     const trainingData = state.trainingData.get();
-    const trainingDataAsPoints = trainingData.xs.map((x, i) => {
-      return {
-        x: x,
-        y: trainingData.ys[i]
-      };
-    });
-
     const predictedData = state.predictedData.get();
-    const predictedDataAsPoints = predictedData.xs.map((x, i) => {
-      return {
-        x,
-        y: predictedData.ys[i]
-      };
+    const columns = [
+      { type: "number", label: "x" },
+      { type: "number", label: "Predicted Data" },
+      { type: "number", label: "Training Data" }
+    ];
+    const rows = predictedData.xs.map((x, i) => {
+      return [x, predictedData.ys[i], trainingData.ys[i]];
     });
     return (
       <React.Fragment>
@@ -66,56 +56,28 @@ export const TrainingGym = observer(
             Gym
           </div>
           <div className="flex-row">
-            <VictoryChart
-              style={
-                {
-                  parent: { height: 220 }
-                } as any
-              }
-              domain={{ x: [-1, 1], y: [-3, 3] }}
-            >
-              <VictoryLegend
-                x={430}
-                y={0}
-                //@ts-ignore
-                title="Legend"
-                centerTitle
-                orientation="horizontal"
-                gutter={20}
-                style={
-                  {
-                    border: { stroke: colors.palePink },
-                    title: { fontSize: 20 }
-                  } as any
+            <Chart
+              legendToggle
+              width={"90%"}
+              height={400}
+              chartType="ScatterChart"
+              data={[columns, ...rows]}
+              options={{
+                backgroundColor: "transparent",
+                title: "Training Data vs Predicted Data",
+                hAxis: {
+                  title: "x",
+                  viewWindow: { max: 1, min: -1 }
+                },
+                vAxis: {
+                  title: "y",
+                  viewWindow: { max: 5, min: -5 }
+                },
+                style: {
+                  background: "transparent"
                 }
-                data={[
-                  {
-                    name: "Training Data",
-                    symbol: { fill: "beige", type: "star" }
-                  },
-                  {
-                    name: "Predicted Shape",
-                    symbol: { fill: "tomato", type: "square" }
-                  }
-                  // { name: "Loss", symbol: { fill: "gold" } }
-                ]}
-              />
-              <VictoryScatter
-                symbol={() => "star"}
-                size={6}
-                style={{ data: { fill: "beige" } }}
-                data={trainingDataAsPoints}
-              />
-              <VictoryScatter
-                symbol={() => "square"}
-                style={{ data: { fill: "tomato" } }}
-                data={predictedDataAsPoints}
-              />
-              {/* <VictoryScatter
-                style={{ data: { fill: "gold" } }}
-                data={[{ x: -3, y: 1 }, { x: 3, y: 2 }]}
-              /> */}
-            </VictoryChart>
+              }}
+            />
           </div>
           <Separator vertical={20} />
           <div
