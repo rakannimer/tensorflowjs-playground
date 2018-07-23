@@ -15,7 +15,7 @@ const App = observer(() => {
       <div className="flex-container">
         <Header />
         <div style={{ display: "flex", flex: 1 }}>
-          {/* <NavigationBar /> */}
+          <NavigationBar />
           <Switch>
             <Route path={"/"} exact>
               <Polynomial />

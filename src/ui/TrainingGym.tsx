@@ -72,9 +72,6 @@ export const TrainingGym = observer(
                 vAxis: {
                   title: "y",
                   viewWindow: { max: 5, min: -5 }
-                },
-                style: {
-                  background: "transparent"
                 }
               }}
             />

@@ -1,11 +1,8 @@
 import * as React from "react";
 import { observer } from "mobx-react";
 import { Link, withRouter } from "react-router-dom";
-import { Separator } from "./Separator";
-import Button from "./Button";
-import { slice } from "../../node_modules/@tensorflow/tfjs";
 
-export const NavigationItem = observer(({ path, isSelected }) => {
+export const NavigationItem = observer(({ name, path, isSelected }) => {
   return (
     <li>
       <div
@@ -16,9 +13,6 @@ export const NavigationItem = observer(({ path, isSelected }) => {
           borderBottomWidth: 1,
           borderBottomStyle: "solid"
         }}
-        // onClick={() => {
-        //   console.log("Oh hai");
-        // }}
       >
         <Link
           to={path}
@@ -26,12 +20,10 @@ export const NavigationItem = observer(({ path, isSelected }) => {
             textDecoration: "none",
             fontSize: isSelected ? "18px" : "17px",
             color: "inherit",
-
-            // fontWeight: "bold",
             fontFamily: "Titillium Web"
           }}
         >
-          <div style={{ padding: 10 }}>{path}</div>
+          <div style={{ padding: 10 }}>{name}</div>
         </Link>
       </div>
     </li>
@@ -44,10 +36,12 @@ export const NavigationList = observer(({ children }) => {
 
 const routes = [
   {
-    path: "polynomial"
+    path: "polynomial",
+    name: "2nd degree polynomial"
   },
   {
-    path: "recommender"
+    path: "recommendation",
+    name: "Recommendation engine (WIP)"
   }
 ];
 
@@ -61,12 +55,13 @@ export const NavigationBar = withRouter(props => {
       }}
     >
       <NavigationList>
-        {routes.map(({ path }) => {
+        {routes.map(({ path, name }) => {
           return (
-            <React.Fragment>
+            <React.Fragment key={`${path}_${name}`}>
               <NavigationItem
                 path={path}
                 key={path}
+                name={name}
                 isSelected={props.location.pathname.replace("/", "") === path}
               />
             </React.Fragment>
