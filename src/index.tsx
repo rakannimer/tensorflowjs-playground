@@ -6,8 +6,6 @@ import "./ui.css";
 import { Header } from "./ui/Header";
 import { NavigationBar } from "./ui/NavigationBar";
 import { Polynomial } from "./routes/Polynomial";
-import { Recommender } from "./routes/Recommender";
-import { About } from "./routes/About";
 
 const App = observer(() => {
   return (
@@ -19,15 +17,6 @@ const App = observer(() => {
           <Switch>
             <Route path={"/"} exact>
               <Polynomial />
-            </Route>
-            <Route path={"/polynomial"}>
-              <Polynomial />
-            </Route>
-            <Route path={"/recommender"}>
-              <Recommender />
-            </Route>
-            <Route path={"/about"}>
-              <About />
             </Route>
           </Switch>
         </div>

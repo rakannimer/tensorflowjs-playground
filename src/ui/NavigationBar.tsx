@@ -38,10 +38,6 @@ const routes = [
   {
     path: "polynomial",
     name: "2nd degree polynomial"
-  },
-  {
-    path: "recommendation",
-    name: "Recommendation engine (WIP)"
   }
 ];
 
