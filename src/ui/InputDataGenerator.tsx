@@ -150,7 +150,11 @@ export const CoefficientSelectorsContainer: React.ComponentType = ({
   return (
     <div
       style={{
-        width: "45%",
+        width: "40%",
+        minWidth: 200,
+        height: 300,
+        // overflowX: "auto",
+        // overflowY: "none",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -191,7 +195,8 @@ export const InputDataGenerator = observer(() => {
         className="flex-row"
         style={{
           minHeight: 200,
-          maxHeight: 200
+          maxHeight: 200,
+          minWidth: 400
         }}
       >
         <CoefficientSelectorsContainer>

@@ -18,7 +18,7 @@
     "dev": "parcel src/index.html",
     "start": "serve static-build/",
     "build": "parcel build src/index.tsx -d static-build/ && cp src/index.prod.html static-build/index.html && cp static/* static-build/",
-    "deploy": "npm run build && cd static-build && now"
+    "deploy": "npm run build && cd static-build && surge --domain tensor-flow-js-playground.surge.sh"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.112",

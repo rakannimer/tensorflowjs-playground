@@ -58,13 +58,16 @@ export const TrainingGym = observer(
           <div className="flex-row">
             <Chart
               legendToggle
-              width={"90%"}
+              width={"100%"}
               height={400}
               chartType="ScatterChart"
               data={[columns, ...rows]}
               options={{
                 backgroundColor: "transparent",
                 title: "Training Data vs Predicted Data",
+                legend: {
+                  position: "bottom"
+                },
                 hAxis: {
                   title: "x",
                   viewWindow: { max: 1, min: -1 }
